@@ -1,110 +1,417 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finais da UEFA Champions League</title>
-<style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
-    header { background: linear-gradient(90deg, #003366, #0066cc); color: white; text-align: center; padding: 2rem 1rem; }
-    header h1 { margin: 0; font-size: 2rem; }
-    main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .card { background-color: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-    .card-content { padding: 1.5rem; }
-    .card h2 { margin-top: 0; color: #003366; }
-    .card p { margin: 0.5rem 0; color: #333; }
-    .modal { display: none; position: fixed; z-index: 1000; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); }
-    .modal-content { margin: auto; display: block; max-width: 90%; max-height: 80%; }
-    .close { position: absolute; top: 20px; right: 35px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }
-    footer { text-align: center; padding: 2rem 1rem; background-color: #003366; color: white; margin-top: 2rem; }
-</style>
-</head>
-<body>
+import React, { useState } from 'react';
+import { Trophy, ChevronDown, ChevronUp, Play } from 'lucide-react';
 
-<header>
-    <h1>Finais da UEFA Champions League (1999‑2024)</h1>
-</header>
+const championsData = [
+  {
+    year: 2024,
+    club: "Real Madrid",
+    opponent: "Borussia Dortmund",
+    score: "2-0",
+    stadium: "Wembley Stadium, Londres",
+    videoId: "7MbW92x24F8",
+    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800",
+    lineup: ["Courtois", "Carvajal", "Rüdiger", "Nacho", "Mendy", "Valverde", "Camavinga", "Kroos", "Bellingham", "Rodrygo", "Vinícius Jr"],
+    path: ["Grupo C (1º)", "R16: Leipzig (2-1 agregado)", "QF: Man City (4-4, 4-3 pens)", "SF: Bayern (4-3 agregado)", "Final: B. Dortmund (2-0)"]
+  },
+  {
+    year: 2023,
+    club: "Manchester City",
+    opponent: "Inter Milan",
+    score: "1-0",
+    stadium: "Atatürk Olympic Stadium, Istambul",
+    videoId: "ouDDj6kr1fY",
+    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
+    lineup: ["Ederson", "Walker", "Dias", "Akanji", "Aké", "Rodri", "De Bruyne", "Bernardo Silva", "Gündogan", "Grealish", "Haaland"],
+    path: ["Grupo G (1º)", "R16: Leipzig (8-1 agregado)", "QF: Bayern (4-1 agregado)", "SF: Real Madrid (5-1 agregado)", "Final: Inter (1-0)"]
+  },
+  {
+    year: 2022,
+    club: "Real Madrid",
+    opponent: "Liverpool",
+    score: "1-0",
+    stadium: "Stade de France, Paris",
+    videoId: "om7O0MFjdNs",
+    image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800",
+    lineup: ["Courtois", "Carvajal", "Militão", "Alaba", "Mendy", "Modrić", "Casemiro", "Kroos", "Valverde", "Benzema", "Vinícius Jr"],
+    path: ["Grupo D (1º)", "R16: PSG (3-2 agregado)", "QF: Chelsea (5-4 agregado)", "SF: Man City (6-5 agregado)", "Final: Liverpool (1-0)"]
+  },
+  {
+    year: 2021,
+    club: "Chelsea",
+    opponent: "Manchester City",
+    score: "1-0",
+    stadium: "Estádio do Dragão, Porto",
+    videoId: "OHWRlAd48KY",
+    image: "https://images.unsplash.com/photo-1522778526097-ce0a22ceb253?w=800",
+    lineup: ["Mendy", "Azpilicueta", "Thiago Silva", "Rüdiger", "James", "Jorginho", "Kanté", "Chilwell", "Mount", "Werner", "Havertz"],
+    path: ["Grupo E (1º)", "R16: Atlético (3-0 agregado)", "QF: Porto (2-1 agregado)", "SF: Real Madrid (3-1 agregado)", "Final: Man City (1-0)"]
+  },
+  {
+    year: 2020,
+    club: "Bayern Munich",
+    opponent: "Paris Saint-Germain",
+    score: "1-0",
+    stadium: "Estádio da Luz, Lisboa",
+    videoId: "WVIQpAJx-vs",
+    image: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800",
+    lineup: ["Neuer", "Kimmich", "Boateng", "Alaba", "Davies", "Goretzka", "Thiago", "Gnabry", "Müller", "Perisic", "Lewandowski"],
+    path: ["Grupo B (1º)", "R16: Chelsea (7-1 agregado)", "QF: Barcelona (8-2)", "SF: Lyon (3-0)", "Final: PSG (1-0)"]
+  },
+  {
+    year: 2019,
+    club: "Liverpool",
+    opponent: "Tottenham",
+    score: "2-0",
+    stadium: "Wanda Metropolitano, Madrid",
+    videoId: "1cSB5f-F4Jk",
+    image: "https://images.unsplash.com/photo-1508768787810-6adc1f613514?w=800",
+    lineup: ["Alisson", "Alexander-Arnold", "Matip", "Van Dijk", "Robertson", "Henderson", "Fabinho", "Wijnaldum", "Salah", "Firmino", "Mané"],
+    path: ["Grupo C (1º)", "R16: Bayern (3-1 agregado)", "QF: Porto (6-1 agregado)", "SF: Barcelona (4-3 agregado)", "Final: Tottenham (2-0)"]
+  },
+  {
+    year: 2018,
+    club: "Real Madrid",
+    opponent: "Liverpool",
+    score: "3-1",
+    stadium: "NSC Olimpiyskiy, Kiev",
+    videoId: "8_5Y2s6yC9g",
+    image: "https://images.unsplash.com/photo-1486286701208-1d58e9338013?w=800",
+    lineup: ["Navas", "Carvajal", "Varane", "Ramos", "Marcelo", "Modrić", "Casemiro", "Kroos", "Isco", "Ronaldo", "Benzema"],
+    path: ["Grupo H (1º)", "R16: PSG (5-2 agregado)", "QF: Juventus (4-3 agregado)", "SF: Bayern (4-3 agregado)", "Final: Liverpool (3-1)"]
+  },
+  {
+    year: 2017,
+    club: "Real Madrid",
+    opponent: "Juventus",
+    score: "4-1",
+    stadium: "Millennium Stadium, Cardiff",
+    videoId: "yzvQCbdAIZQ",
+    image: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800",
+    lineup: ["Navas", "Carvajal", "Varane", "Ramos", "Marcelo", "Modrić", "Casemiro", "Kroos", "Isco", "Ronaldo", "Benzema"],
+    path: ["Grupo F (1º)", "R16: Napoli (6-2 agregado)", "QF: Bayern (6-3 agregado)", "SF: Atlético (4-2 agregado)", "Final: Juventus (4-1)"]
+  },
+  {
+    year: 2016,
+    club: "Real Madrid",
+    opponent: "Atlético Madrid",
+    score: "1-1 (5-3 pens)",
+    stadium: "San Siro, Milão",
+    videoId: "t9M85cJcfBs",
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+    lineup: ["Navas", "Carvajal", "Pepe", "Ramos", "Marcelo", "Modrić", "Kroos", "Casemiro", "Bale", "Ronaldo", "Benzema"],
+    path: ["Grupo A (1º)", "R16: Roma (4-0 agregado)", "QF: Wolfsburg (3-2 agregado)", "SF: Man City (1-0 agregado)", "Final: Atlético (1-1, 5-3 pens)"]
+  },
+  {
+    year: 2015,
+    club: "Barcelona",
+    opponent: "Juventus",
+    score: "3-1",
+    stadium: "Olympiastadion, Berlim",
+    videoId: "RRRGHJbL5L8",
+    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
+    lineup: ["Ter Stegen", "Alves", "Piqué", "Mascherano", "Alba", "Rakitić", "Busquets", "Iniesta", "Messi", "Suárez", "Neymar"],
+    path: ["Grupo F (1º)", "R16: Man City (3-1 agregado)", "QF: PSG (5-1 agregado)", "SF: Bayern (5-3 agregado)", "Final: Juventus (3-1)"]
+  },
+  {
+    year: 2014,
+    club: "Real Madrid",
+    opponent: "Atlético Madrid",
+    score: "4-1",
+    stadium: "Estádio da Luz, Lisboa",
+    videoId: "gg00RPPQzgQ",
+    image: "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800",
+    lineup: ["Casillas", "Carvajal", "Ramos", "Pepe", "Coentrao", "Modrić", "Alonso", "Di María", "Bale", "Ronaldo", "Benzema"],
+    path: ["Grupo B (1º)", "R16: Schalke (9-2 agregado)", "QF: Dortmund (3-2 agregado)", "SF: Bayern (5-0 agregado)", "Final: Atlético (4-1)"]
+  },
+  {
+    year: 2013,
+    club: "Bayern Munich",
+    opponent: "Borussia Dortmund",
+    score: "2-1",
+    stadium: "Wembley Stadium, Londres",
+    videoId: "IUeLx6vMXrQ",
+    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800",
+    lineup: ["Neuer", "Lahm", "Boateng", "Dante", "Alaba", "Schweinsteiger", "Martinez", "Ribéry", "Müller", "Robben", "Mandžukić"],
+    path: ["Grupo F (1º)", "R16: Arsenal (3-1 agregado)", "QF: Juventus (4-0 agregado)", "SF: Barcelona (7-0 agregado)", "Final: Dortmund (2-1)"]
+  },
+  {
+    year: 2012,
+    club: "Chelsea",
+    opponent: "Bayern Munich",
+    score: "1-1 (4-3 pens)",
+    stadium: "Allianz Arena, Munique",
+    videoId: "WAdzQIFUtN8",
+    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800",
+    lineup: ["Čech", "Bosingwa", "Cahill", "Luiz", "Cole", "Mikel", "Lampard", "Ramires", "Mata", "Drogba", "Kalou"],
+    path: ["Grupo E (2º)", "R16: Napoli (5-4 agregado)", "QF: Benfica (3-1 agregado)", "SF: Barcelona (3-2 agregado)", "Final: Bayern (1-1, 4-3 pens)"]
+  },
+  {
+    year: 2011,
+    club: "Barcelona",
+    opponent: "Manchester United",
+    score: "3-1",
+    stadium: "Wembley Stadium, Londres",
+    videoId: "FVzIW8a65qc",
+    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
+    lineup: ["Valdés", "Alves", "Piqué", "Mascherano", "Abidal", "Xavi", "Busquets", "Iniesta", "Pedro", "Messi", "Villa"],
+    path: ["Grupo D (1º)", "R16: Arsenal (4-3 agregado)", "QF: Shakhtar (6-1 agregado)", "SF: Real Madrid (3-1 agregado)", "Final: Man United (3-1)"]
+  },
+  {
+    year: 2010,
+    club: "Inter Milan",
+    opponent: "Bayern Munich",
+    score: "2-0",
+    stadium: "Santiago Bernabéu, Madrid",
+    videoId: "cJdJTlKft6o",
+    image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800",
+    lineup: ["Júlio César", "Maicon", "Lúcio", "Samuel", "Chivu", "Zanetti", "Cambiasso", "Sneijder", "Pandev", "Eto'o", "Milito"],
+    path: ["Grupo F (1º)", "R16: Chelsea (3-1 agregado)", "QF: CSKA (2-0 agregado)", "SF: Barcelona (3-2 agregado)", "Final: Bayern (2-0)"]
+  },
+  {
+    year: 2009,
+    club: "Barcelona",
+    opponent: "Manchester United",
+    score: "2-0",
+    stadium: "Stadio Olimpico, Roma",
+    videoId: "v6ecwTDFrUk",
+    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
+    lineup: ["Valdés", "Puyol", "Touré", "Piqué", "Sylvinho", "Xavi", "Busquets", "Iniesta", "Messi", "Eto'o", "Henry"],
+    path: ["Grupo C (1º)", "R16: Lyon (6-3 agregado)", "QF: Bayern (5-1 agregado)", "SF: Chelsea (1-1, golos fora)", "Final: Man United (2-0)"]
+  },
+  {
+    year: 2008,
+    club: "Manchester United",
+    opponent: "Chelsea",
+    score: "1-1 (6-5 pens)",
+    stadium: "Luzhniki Stadium, Moscovo",
+    videoId: "iG0cq5_cJfI",
+    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800",
+    lineup: ["Van der Sar", "Brown", "Ferdinand", "Vidić", "Evra", "Hargreaves", "Scholes", "Carrick", "Ronaldo", "Tévez", "Rooney"],
+    path: ["Grupo F (1º)", "R16: Lyon (2-1 agregado)", "QF: Roma (3-0 agregado)", "SF: Barcelona (1-0 agregado)", "Final: Chelsea (1-1, 6-5 pens)"]
+  },
+  {
+    year: 2007,
+    club: "AC Milan",
+    opponent: "Liverpool",
+    score: "2-1",
+    stadium: "Olympic Stadium, Atenas",
+    videoId: "HlEDdukeLn0",
+    image: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800",
+    lineup: ["Dida", "Oddo", "Nesta", "Maldini", "Jankulovski", "Gattuso", "Pirlo", "Ambrosini", "Seedorf", "Kaká", "Inzaghi"],
+    path: ["Grupo H (1º)", "R16: Celtic (1-0 agregado)", "QF: Bayern (4-2 agregado)", "SF: Man United (5-3 agregado)", "Final: Liverpool (2-1)"]
+  },
+  {
+    year: 2006,
+    club: "Barcelona",
+    opponent: "Arsenal",
+    score: "2-1",
+    stadium: "Stade de France, Paris",
+    videoId: "rrjb_9zVpNI",
+    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
+    lineup: ["Valdés", "Oleguer", "Puyol", "Márquez", "Van Bronckhorst", "Van Bommel", "Deco", "Iniesta", "Giuly", "Eto'o", "Ronaldinho"],
+    path: ["Grupo C (1º)", "R16: Chelsea (3-2 agregado)", "QF: Benfica (2-0 agregado)", "SF: Milan (1-0 agregado)", "Final: Arsenal (2-1)"]
+  },
+  {
+    year: 2005,
+    club: "Liverpool",
+    opponent: "AC Milan",
+    score: "3-3 (3-2 pens)",
+    stadium: "Atatürk Olympic Stadium, Istambul",
+    videoId: "zp82SUtJT1I",
+    image: "https://images.unsplash.com/photo-1508768787810-6adc1f613514?w=800",
+    lineup: ["Dudek", "Finnan", "Carragher", "Hyypiä", "Traore", "Garcia", "Alonso", "Gerrard", "Riise", "Kewell", "Baros"],
+    path: ["Grupo A (2º)", "R16: Leverkusen (6-2 agregado)", "QF: Juventus (2-1 agregado)", "SF: Chelsea (1-0 agregado)", "Final: Milan (3-3, 3-2 pens)"]
+  },
+  {
+    year: 2004,
+    club: "FC Porto",
+    opponent: "Monaco",
+    score: "3-0",
+    stadium: "Arena AufSchalke, Gelsenkirchen",
+    videoId: "6YpT_LzHvwg",
+    image: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800",
+    lineup: ["Vítor Baía", "Paulo Ferreira", "Carvalho", "Jorge Costa", "Nuno Valente", "Costinha", "Maniche", "Alenichev", "Deco", "Derlei", "McCarthy"],
+    path: ["Grupo F (1º)", "R16: Man United (2-1 agregado)", "QF: Lyon (2-2, golos fora)", "SF: Deportivo (1-0 agregado)", "Final: Monaco (3-0)"]
+  },
+  {
+    year: 2003,
+    club: "AC Milan",
+    opponent: "Juventus",
+    score: "0-0 (3-2 pens)",
+    stadium: "Old Trafford, Manchester",
+    videoId: "oXBm4qpP-F4",
+    image: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800",
+    lineup: ["Dida", "Costacurta", "Nesta", "Maldini", "Kaladze", "Gattuso", "Pirlo", "Seedorf", "Rui Costa", "Inzaghi", "Shevchenko"],
+    path: ["Grupo G (2º)", "R16: Ajax (3-2 agregado)", "QF: Ajax (3-2 agregado)", "SF: Inter (1-1, golos fora)", "Final: Juventus (0-0, 3-2 pens)"]
+  },
+  {
+    year: 2002,
+    club: "Real Madrid",
+    opponent: "Bayer Leverkusen",
+    score: "2-1",
+    stadium: "Hampden Park, Glasgow",
+    videoId: "qHXPCNPuSAg",
+    image: "https://images.unsplash.com/photo-1486286701208-1d58e9338013?w=800",
+    lineup: ["Casillas", "Salgado", "Hierro", "Helguera", "Roberto Carlos", "Figo", "Makelele", "McManaman", "Zidane", "Raúl", "Morientes"],
+    path: ["Grupo C (1º)", "QF2: Panathinaikos (3-1 agregado)", "QF: Bayern (3-2 agregado)", "SF: Barcelona (2-0 agregado)", "Final: Leverkusen (2-1)"]
+  },
+  {
+    year: 2001,
+    club: "Bayern Munich",
+    opponent: "Valencia",
+    score: "1-1 (5-4 pens)",
+    stadium: "San Siro, Milão",
+    videoId: "xE9YFJiCb6g",
+    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800",
+    lineup: ["Kahn", "Salihamidžić", "Andersson", "Kuffour", "Lizarazu", "Jeremies", "Effenberg", "Hargreaves", "Scholl", "Élber", "Sagnol"],
+    path: ["Grupo A (2º)", "QF2: Real Madrid (2-1 agregado)", "QF: Man United (3-1 agregado)", "SF: Real Madrid (2-1 agregado)", "Final: Valencia (1-1, 5-4 pens)"]
+  },
+  {
+    year: 2000,
+    club: "Real Madrid",
+    opponent: "Valencia",
+    score: "3-0",
+    stadium: "Stade de France, Paris",
+    videoId: "0TgPMSrC9eA",
+    image: "https://images.unsplash.com/photo-1486286701208-1d58e9338013?w=800",
+    lineup: ["Casillas", "Salgado", "Hierro", "Karanka", "Roberto Carlos", "Helguera", "Redondo", "McManaman", "Raúl", "Anelka", "Morientes"],
+    path: ["Grupo D (1º)", "QF2: Man United (3-2 agregado)", "QF: Man United (3-2 agregado)", "SF: Bayern (4-2 agregado)", "Final: Valencia (3-0)"]
+  }
+];
 
-<main>
-    <!-- Exemplo de card com vídeo -->
-    <div class="card" data-video="https://www.youtube.com/embed/_Y5cboBkl7w">
-        <div class="card-content">
-            <h2>1999 – Manchester United 2‑1 Bayern Munich</h2>
-            <p>Flashback oficial do canal UEFA.</p>
-            <p><em>Clique no card para ver o vídeo no site.</em></p>
+export default function ChampionsLeagueWinners() {
+  const [expandedYear, setExpandedYear] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  const toggleExpand = (year) => {
+    setExpandedYear(expandedYear === year ? null : year);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-20"></div>
+        <div className="relative container mx-auto px-4 py-16">
+          <div className="text-center">
+            <Trophy className="w-20 h-20 mx-auto mb-6 text-yellow-400 animate-pulse" />
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
+              UEFA Champions League
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300">Vencedores 2000-2024</p>
+            <div className="mt-4 h-1 w-32 bg-gradient-to-r from-yellow-400 to-yellow-200 mx-auto"></div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="card" data-video="https://www.uefa.com/uefachampionsleague/history/video/017c-0e661cd2d577-538cc2c00e59-1000--bayern-v-valencia-the-full-story-of-the-2001-final/embed/">
-        <div class="card-content">
-            <h2>2001 – Bayern Munich 1‑1 Valencia CF (5‑4 pen)</h2>
-            <p>Full Story oficial UEFA.</p>
-            <p><em>Clique no card para ver o vídeo no site.</em></p>
+      {selectedVideo && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4" onClick={() => setSelectedVideo(null)}>
+          <div className="relative w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
+            <button 
+              onClick={() => setSelectedVideo(null)}
+              className="absolute -top-12 right-0 text-white text-4xl hover:text-red-500 transition-colors"
+            >
+              ×
+            </button>
+            <div className="relative pt-[56.25%]">
+              <iframe
+                className="absolute top-0 left-0 w-full h-full rounded-lg"
+                src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+                title="Champions League Final"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
         </div>
-    </div>
+      )}
 
-    <div class="card" data-video="https://www.youtube.com/embed/_Y5cboBkl7w">
-        <div class="card-content">
-            <h2>2005 – Liverpool 3‑3 AC Milan (2‑3 pen)</h2>
-            <p>Flashback oficial.</p>
-            <p><em>Clique no card para ver o vídeo no site.</em></p>
+      <div className="container mx-auto px-4 py-12">
+        <div className="space-y-6">
+          {championsData.map((data) => (
+            <div
+              key={data.year}
+              className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-yellow-500 transition-all duration-300 transform hover:scale-[1.02] shadow-2xl"
+            >
+              <div 
+                className="p-6 cursor-pointer flex items-center justify-between"
+                onClick={() => toggleExpand(data.year)}
+              >
+                <div className="flex items-center space-x-6">
+                  <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full p-4 shadow-lg">
+                    <Trophy className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-4xl font-bold text-yellow-400">{data.year}</h2>
+                    <p className="text-2xl font-semibold mt-1">{data.club}</p>
+                    <p className="text-gray-400 mt-1">{data.opponent} • {data.score}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedVideo(data.videoId);
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full flex items-center space-x-2 transition-all transform hover:scale-105 shadow-lg"
+                  >
+                    <Play className="w-5 h-5" />
+                    <span className="font-semibold">Ver Vídeo</span>
+                  </button>
+                  {expandedYear === data.year ? (
+                    <ChevronUp className="w-8 h-8 text-yellow-400" />
+                  ) : (
+                    <ChevronDown className="w-8 h-8 text-gray-400" />
+                  )}
+                </div>
+              </div>
+
+              {expandedYear === data.year && (
+                <div className="border-t border-gray-700 bg-black bg-opacity-30">
+                  <div className="p-6 space-y-6">
+                    <div className="rounded-xl overflow-hidden shadow-2xl">
+                      <img 
+                        src={data.image} 
+                        alt={`${data.club} vitória`}
+                        className="w-full h-96 object-cover"
+                      />
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-gradient-to-br from-blue-900 to-blue-800 p-6 rounded-xl">
+                        <h3 className="text-2xl font-bold mb-4 text-yellow-400">11 Inicial</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                          {data.lineup.map((player, idx) => (
+                            <div key={idx} className="bg-blue-950 bg-opacity-50 p-3 rounded-lg text-center">
+                              <p className="font-semibold">{player}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-purple-900 to-purple-800 p-6 rounded-xl">
+                        <h3 className="text-2xl font-bold mb-4 text-yellow-400">Percurso até à Final</h3>
+                        <div className="space-y-3">
+                          {data.path.map((stage, idx) => (
+                            <div key={idx} className="bg-purple-950 bg-opacity-50 p-3 rounded-lg">
+                              <p className="text-sm">{stage}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-yellow-900 to-yellow-800 p-6 rounded-xl">
+                      <h3 className="text-2xl font-bold mb-2 text-yellow-400">Final</h3>
+                      <p className="text-lg"><strong>Local:</strong> {data.stadium}</p>
+                      <p className="text-lg"><strong>Resultado:</strong> {data.club} {data.score} {data.opponent}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
+      </div>
     </div>
-
-    <div class="card" data-video="https://www.youtube.com/embed/rtFGpfrdlMI">
-        <div class="card-content">
-            <h2>2018 – Real Madrid 3‑1 Liverpool</h2>
-            <p>Flashback oficial.</p>
-            <p><em>Clique no card para ver o vídeo no site.</em></p>
-        </div>
-    </div>
-
-    <div class="card" data-video="https://www.youtube.com/embed/GgKIhlyjX2w">
-        <div class="card-content">
-            <h2>2024 – Real Madrid 2‑0 Borussia Dortmund</h2>
-            <p>Vídeo oficial Real Madrid.</p>
-            <p><em>Clique no card para ver o vídeo no site.</em></p>
-        </div>
-    </div>
-</main>
-
-<!-- Modal para vídeo -->
-<div id="videoModal" class="modal">
-    <span class="close">&times;</span>
-    <iframe class="modal-content" id="modalVideo" src="" frameborder="0" allowfullscreen></iframe>
-</div>
-
-<script>
-    const modal = document.getElementById("videoModal");
-    const modalVideo = document.getElementById("modalVideo");
-    const closeBtn = document.getElementsByClassName("close")[0];
-    const cards = document.querySelectorAll(".card");
-
-    cards.forEach(card => {
-        card.addEventListener("click", () => {
-            const videoSrc = card.getAttribute("data-video");
-            modal.style.display = "block";
-            modalVideo.src = videoSrc + "?autoplay=1"; // Reproduz automaticamente
-        });
-    });
-
-    closeBtn.onclick = function() {
-        modal.style.display = "none";
-        modalVideo.src = ""; // Para o vídeo ao fechar
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-            modalVideo.src = "";
-        }
-    }
-</script>
-
-<footer>
-    <p>© 2025 Champions League Finais. Todos os direitos reservados.</p>
-</footer>
-
-</body>
-</html>
+  );
+}
