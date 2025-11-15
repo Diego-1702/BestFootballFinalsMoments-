@@ -1,298 +1,241 @@
-import React, { useState, useEffect } from 'react';
-import { Trophy, Home, Award, Menu, X, ChevronDown, ChevronUp, Play } from 'lucide-react';
-
-const championsData = [
-  {
-    year: 2024,
-    club: "Real Madrid",
-    opponent: "Borussia Dortmund",
-    score: "2-0",
-    stadium: "Wembley Stadium",
-    videoId: "7MbW92x24F8",
-    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800",
-    lineup: ["Courtois", "Carvajal", "Rüdiger", "Nacho", "Mendy", "Valverde", "Camavinga", "Kroos", "Bellingham", "Rodrygo", "Vinícius Jr"],
-    path: ["Grupo C (1º)", "R16: Leipzig 2-1", "QF: Man City 4-4 pens", "SF: Bayern 4-3", "Final: Dortmund 2-0"]
-  },
-  {
-    year: 2023,
-    club: "Manchester City",
-    opponent: "Inter Milan",
-    score: "1-0",
-    stadium: "Atatürk Stadium",
-    videoId: "ouDDj6kr1fY",
-    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
-    lineup: ["Ederson", "Walker", "Dias", "Akanji", "Aké", "Rodri", "De Bruyne", "B. Silva", "Gündogan", "Grealish", "Haaland"],
-    path: ["Grupo G (1º)", "R16: Leipzig 8-1", "QF: Bayern 4-1", "SF: Real Madrid 5-1", "Final: Inter 1-0"]
-  }
-];
-
-const premierData = [
-  {
-    year: "2023-24",
-    club: "Manchester City",
-    points: 91,
-    wins: 28,
-    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
-    lineup: ["Ederson", "Walker", "Dias", "Akanji", "Gvardiol", "Rodri", "De Bruyne", "Foden", "B. Silva", "Grealish", "Haaland"],
-    keyGames: ["Man City 3-1 Man United", "Arsenal 0-0 Man City", "Man City 4-1 Liverpool", "Tottenham 0-2 Man City", "Man City 3-1 West Ham"]
-  },
-  {
-    year: "2022-23",
-    club: "Manchester City",
-    points: 89,
-    wins: 28,
-    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
-    lineup: ["Ederson", "Walker", "Stones", "Akanji", "Aké", "Rodri", "De Bruyne", "Gündogan", "B. Silva", "Foden", "Haaland"],
-    keyGames: ["Arsenal 1-3 Man City", "Man City 4-1 Arsenal", "Man United 1-2 Man City", "Man City 1-0 Chelsea", "Man City 3-0 Bayern"]
-  }
-];
-
-const heroImages = [
-  { url: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200", title: "A Paixão do Futebol", description: "Momentos épicos" },
-  { url: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1200", title: "Glória Europeia", description: "Champions League" },
-  { url: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200", title: "Domínio Inglês", description: "Premier League" },
-  { url: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=1200", title: "Lendas do Jogo", description: "Os maiores campeões" }
-];
-
-export default function FootballWebsite() {
-  const [currentPage, setCurrentPage] = useState('home');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedYear, setExpandedYear] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    if (currentPage === 'home') {
-      const interval = setInterval(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-      }, 5000);
-      return () => clearInterval(interval);
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Football Legends</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #000428, #004e92);
+      color: #fff;
     }
-  }, [currentPage]);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
-      <nav className="bg-gradient-to-r from-blue-900 to-purple-900 shadow-lg sticky top-0 z-40">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              <Trophy className="w-8 h-8 text-yellow-400" />
-              <span className="text-xl font-bold">Football Legends</span>
-            </div>
-            <div className="hidden md:flex space-x-4">
-              <button onClick={() => setCurrentPage('home')} className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${currentPage === 'home' ? 'bg-yellow-500 text-black' : 'hover:bg-blue-800'}`}>
-                <Home className="w-5 h-5" />
-                <span>Início</span>
-              </button>
-              <button onClick={() => setCurrentPage('champions')} className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${currentPage === 'champions' ? 'bg-yellow-500 text-black' : 'hover:bg-blue-800'}`}>
-                <Trophy className="w-5 h-5" />
-                <span>Champions</span>
-              </button>
-              <button onClick={() => setCurrentPage('premier')} className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${currentPage === 'premier' ? 'bg-yellow-500 text-black' : 'hover:bg-blue-800'}`}>
-                <Award className="w-5 h-5" />
-                <span>Premier</span>
-              </button>
-            </div>
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden">
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-          {mobileMenuOpen && (
-            <div className="md:hidden pb-4 space-y-2">
-              <button onClick={() => { setCurrentPage('home'); setMobileMenuOpen(false); }} className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-800">
-                <Home className="w-5 h-5" />
-                <span>Início</span>
-              </button>
-              <button onClick={() => { setCurrentPage('champions'); setMobileMenuOpen(false); }} className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-800">
-                <Trophy className="w-5 h-5" />
-                <span>Champions</span>
-              </button>
-              <button onClick={() => { setCurrentPage('premier'); setMobileMenuOpen(false); }} className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-800">
-                <Award className="w-5 h-5" />
-                <span>Premier</span>
-              </button>
-            </div>
-          )}
-        </div>
-      </nav>
+    /* Navbar */
+    nav {
+      display: flex;
+      padding: 20px 40px;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(20px);
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    }
+    nav h1 {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+    }
+    nav h1 svg {
+      margin-right: 10px;
+      fill: #fbbf24;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
 
-      {currentPage === 'home' && (
-        <div>
-          <div className="relative h-screen overflow-hidden">
-            {heroImages.map((img, idx) => (
-              <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}>
-                <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
-                <img src={img.url} alt={img.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 z-20 flex items-center justify-center">
-                  <div className="text-center px-4">
-                    <h1 className="text-5xl md:text-7xl font-bold mb-4">{img.title}</h1>
-                    <p className="text-2xl text-yellow-400">{img.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30 flex space-x-3">
-              {heroImages.map((_, idx) => (
-                <button key={idx} onClick={() => setCurrentImageIndex(idx)} className={`w-3 h-3 rounded-full ${idx === currentImageIndex ? 'bg-yellow-400 w-8' : 'bg-white bg-opacity-50'}`} />
-              ))}
-            </div>
-          </div>
-          <div className="container mx-auto px-4 py-16">
-            <div className="max-w-4xl mx-auto bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 border border-yellow-500">
-              <h2 className="text-4xl font-bold text-yellow-400 mb-6 text-center">Bem-vindo ao Football Legends</h2>
-              <p className="text-gray-300 text-lg mb-8">Este website é dedicado aos maiores momentos do futebol europeu. Explore a história das competições mais prestigiadas.</p>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-blue-900 bg-opacity-50 p-6 rounded-xl">
-                  <Trophy className="w-12 h-12 text-yellow-400 mb-4 mx-auto" />
-                  <h3 className="text-2xl font-bold text-yellow-400 mb-3 text-center">Champions League</h3>
-                  <p className="text-center">Vencedores desde 2000, com vídeos, escalações e percursos completos.</p>
-                </div>
-                <div className="bg-purple-900 bg-opacity-50 p-6 rounded-xl">
-                  <Award className="w-12 h-12 text-yellow-400 mb-4 mx-auto" />
-                  <h3 className="text-2xl font-bold text-yellow-400 mb-3 text-center">Premier League</h3>
-                  <p className="text-center">Campeões desde 2010, com estatísticas e jogos-chave.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+    /* Hero */
+    .hero {
+      height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background-image: url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.5);
+    }
+    .hero .content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+    }
+    .hero p {
+      font-size: 1.5rem;
+      margin-top: 10px;
+      color: #fbbf24;
+    }
 
-      {currentPage === 'champions' && (
-        <div className="pb-16">
-          <div className="container mx-auto px-4 py-16 text-center">
-            <Trophy className="w-20 h-20 mx-auto mb-6 text-yellow-400 animate-pulse" />
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-yellow-400">UEFA Champions League</h1>
-            <p className="text-xl text-gray-300">Vencedores 2000-2024</p>
-          </div>
+    /* Sections */
+    .section {
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #fbbf24;
+    }
+    .section p {
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+      color: #e5e5e5;
+    }
 
-          {selectedVideo && (
-            <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4" onClick={() => setSelectedVideo(null)}>
-              <div className="relative w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
-                <button onClick={() => setSelectedVideo(null)} className="absolute -top-12 right-0 text-white text-4xl hover:text-red-500">×</button>
-                <div className="relative pt-[56.25%]">
-                  <iframe className="absolute top-0 left-0 w-full h-full rounded-lg" src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`} title="Champions League" allow="autoplay" allowFullScreen></iframe>
-                </div>
-              </div>
-            </div>
-          )}
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      transition: 0.3s;
+      border: 1px solid transparent;
+    }
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: #fbbf24;
+    }
 
-          <div className="container mx-auto px-4 space-y-6">
-            {championsData.map((data) => (
-              <div key={data.year} className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl border border-gray-700 hover:border-yellow-500 transition-all shadow-2xl">
-                <div className="p-6 cursor-pointer flex flex-col md:flex-row items-center justify-between" onClick={() => setExpandedYear(expandedYear === data.year ? null : data.year)}>
-                  <div className="flex items-center space-x-6 mb-4 md:mb-0">
-                    <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full p-4">
-                      <Trophy className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-4xl font-bold text-yellow-400">{data.year}</h2>
-                      <p className="text-2xl font-semibold mt-1">{data.club}</p>
-                      <p className="text-gray-400 mt-1">{data.opponent} {data.score}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <button onClick={(e) => { e.stopPropagation(); setSelectedVideo(data.videoId); }} className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-full flex items-center space-x-2">
-                      <Play className="w-5 h-5" />
-                      <span>Ver Vídeo</span>
-                    </button>
-                    {expandedYear === data.year ? <ChevronUp className="w-8 h-8 text-yellow-400" /> : <ChevronDown className="w-8 h-8" />}
-                  </div>
-                </div>
-                {expandedYear === data.year && (
-                  <div className="border-t border-gray-700 bg-black bg-opacity-30 p-6 space-y-6">
-                    <img src={data.image} alt={data.club} className="w-full h-96 object-cover rounded-xl" />
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="bg-blue-900 bg-opacity-50 p-6 rounded-xl">
-                        <h3 className="text-2xl font-bold mb-4 text-yellow-400">11 Inicial</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                          {data.lineup.map((player, idx) => (
-                            <div key={idx} className="bg-blue-950 bg-opacity-50 p-3 rounded-lg text-center">
-                              <p className="font-semibold">{player}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="bg-purple-900 bg-opacity-50 p-6 rounded-xl">
-                        <h3 className="text-2xl font-bold mb-4 text-yellow-400">Percurso</h3>
-                        <div className="space-y-3">
-                          {data.path.map((stage, idx) => (
-                            <div key={idx} className="bg-purple-950 bg-opacity-50 p-3 rounded-lg">
-                              <p>{stage}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-r from-yellow-900 to-yellow-800 p-6 rounded-xl">
-                      <h3 className="text-2xl font-bold mb-2 text-yellow-400">Final</h3>
-                      <p className="text-lg"><strong>Local:</strong> {data.stadium}</p>
-                      <p className="text-lg"><strong>Resultado:</strong> {data.club} {data.score} {data.opponent}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+    /* Card content */
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .card h3 {
+      margin: 10px 0;
+      font-size: 1.4rem;
+      color: #fbbf24;
+    }
 
-      {currentPage === 'premier' && (
-        <div className="pb-16">
-          <div className="container mx-auto px-4 py-16 text-center">
-            <Award className="w-20 h-20 mx-auto mb-6 text-yellow-400 animate-pulse" />
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-yellow-400">Premier League</h1>
-            <p className="text-xl text-gray-300">Campeões 2010-2024</p>
-          </div>
+    .card-list {
+      text-align: left;
+      margin-top: 16px;
+    }
+    .card-list li {
+      margin: 6px 0;
+      color: #ddd;
+      font-size: 0.9rem;
+    }
 
-          <div className="container mx-auto px-4 space-y-6">
-            {premierData.map((data) => (
-              <div key={data.year} className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl border border-gray-700 hover:border-yellow-500 transition-all shadow-2xl">
-                <div className="p-6 cursor-pointer flex flex-col md:flex-row items-center justify-between" onClick={() => setExpandedYear(expandedYear === data.year ? null : data.year)}>
-                  <div className="flex items-center space-x-6 mb-4 md:mb-0">
-                    <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full p-4">
-                      <Award className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-4xl font-bold text-yellow-400">{data.year}</h2>
-                      <p className="text-2xl font-semibold mt-1">{data.club}</p>
-                      <p className="text-gray-400 mt-1">{data.points} pontos • {data.wins} vitórias</p>
-                    </div>
-                  </div>
-                  {expandedYear === data.year ? <ChevronUp className="w-8 h-8 text-yellow-400" /> : <ChevronDown className="w-8 h-8" />}
-                </div>
-                {expandedYear === data.year && (
-                  <div className="border-t border-gray-700 bg-black bg-opacity-30 p-6 space-y-6">
-                    <img src={data.image} alt={data.club} className="w-full h-96 object-cover rounded-xl" />
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="bg-blue-900 bg-opacity-50 p-6 rounded-xl">
-                        <h3 className="text-2xl font-bold mb-4 text-yellow-400">11 Inicial</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                          {data.lineup.map((player, idx) => (
-                            <div key={idx} className="bg-blue-950 bg-opacity-50 p-3 rounded-lg text-center">
-                              <p className="font-semibold">{player}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="bg-purple-900 bg-opacity-50 p-6 rounded-xl">
-                        <h3 className="text-2xl font-bold mb-4 text-yellow-400">Jogos-Chave</h3>
-                        <div className="space-y-3">
-                          {data.keyGames.map((game, idx) => (
-                            <div key={idx} className="bg-purple-950 bg-opacity-50 p-3 rounded-lg">
-                              <p>{game}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      color: rgba(255,255,255,.6);
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <h1>
+      <svg width="26" height="26" viewBox="0 0 24 24"><path d="M7 21v-2h10v2H7zM12 16l-3.5-3.5L10.1 11l1.9 1.9L16 8.1l1.4 1.4L12 16z" /></svg>
+      Football Legends
+    </h1>
+    <ul>
+      <li><a href="#champions">Champions</a></li>
+      <li><a href="#premier">Premier</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <div class="content">
+      <h1>A Paixão do Futebol</h1>
+      <p>Os maiores momentos do futebol europeu</p>
     </div>
-  );
-}
+  </header>
+
+  <section id="champions" class="section">
+    <h2>UEFA Champions League</h2>
+    <p>Grandes campeões com escalações e percursos históricos.</p>
+
+    <div class="cards">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800" alt="Real Madrid" />
+        <h3>Real Madrid - 2024</h3>
+        <p>Dortmund 2-0 | Wembley</p>
+        <ul class="card-list">
+          <li><strong>Onze Inicial:</strong> Courtois, Carvajal, Rüdiger, ...</li>
+          <li><strong>Percurso:</strong> Leipzig, Man City, Bayern...</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800" alt="Manchester City" />
+        <h3>Manchester City - 2023</h3>
+        <p>Inter 1-0 | Istambul</p>
+        <ul class="card-list">
+          <li><strong>Onze Inicial:</strong> Ederson, Walker, etc.</li>
+          <li><strong>Percurso:</strong> Leipzig, Bayern, Real...</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="premier" class="section">
+    <h2>Premier League</h2>
+    <p>Recordes do dominador inglês desde 2010.</p>
+
+    <div class="cards">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800" alt="Man City" />
+        <h3>Manchester City - 2024</h3>
+        <p>91 pontos • 28 vitórias</p>
+        <ul class="card-list">
+          <li><strong>Onze Inicial:</strong> Ederson, Rodri, Haaland...</li>
+          <li><strong>Destaques:</strong> City 4-1 Liverpool...</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800" alt="Man City" />
+        <h3>Manchester City - 2023</h3>
+        <p>89 pontos • 28 vitórias</p>
+        <ul class="card-list">
+          <li><strong>Onze Inicial:</strong> Ederson, Stones...</li>
+          <li><strong>Destaques:</strong> Arsenal 1-3 City...</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2024 Football Legends • Criado com paixão ao esporte
+  </footer>
+</body>
+</html>
